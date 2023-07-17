@@ -1,5 +1,5 @@
 import { apiSlice } from './apiSlice'
-import { ORDERS_URL } from '../constants'
+import { ORDERS_URL } from '../constants.js'
 
 export const ordersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -9,8 +9,14 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: {...order}
       })
-    })
+    }),
+    getOrderDetails: builder.query({
+      query: (orderId) => ({
+        url: `${ORDERS_URL}/${orderId}`
+      }),
+      keepUnusedDataFor: 5,
+    }),
   })
 })
 
-export const { useCreateOrderMutation } = ordersApiSlice
+export const { useCreateOrderMutation, useGetOrderDetailsQuery } = ordersApiSlice
