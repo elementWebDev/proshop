@@ -8,8 +8,8 @@ import { logout } from '../slices/authSlice.js'
 import logo from '../assets/logo.png'
 
 const Header = () => {
-  const { cartItems } = useSelector((state) => state.cart)
-  const { userInfo } = useSelector((state) => state.auth)
+  const { cartItems } = useSelector(state => state.cart)
+  const { userInfo } = useSelector(state => state.auth)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -32,7 +32,7 @@ const Header = () => {
         <Container>
           <LinkContainer to='/'>
             <Navbar.Brand>
-              <img src={ logo } alt='ProShop' />
+              <img src={logo} alt='ProShop' />
               ProShop
             </Navbar.Brand>
           </LinkContainer>
@@ -42,16 +42,14 @@ const Header = () => {
               <LinkContainer to='/cart'>
                 <Nav.Link>
                   <FaShoppingCart /> Cart
-                  {
-                    cartItems.length > 0 && (
-                      <Badge pill bg='success' style={ { marginLeft: '5px' } }>
-                        { cartItems.reduce((a, c) => a + c.qty, 0) }
-                      </Badge>
-                    )
-                  }
+                  {cartItems.length > 0 && (
+                    <Badge pill bg='success' style={{ marginLeft: '5px' }}>
+                      {cartItems.reduce((a, c) => a + c.qty, 0)}
+                    </Badge>
+                  )}
                 </Nav.Link>
               </LinkContainer>
-              { userInfo ? (
+              {userInfo ? (
                 <NavDropdown title={userInfo.name} id='username'>
                   <LinkContainer to='/profile'>
                     <NavDropdown.Item>Profile</NavDropdown.Item>
@@ -60,12 +58,26 @@ const Header = () => {
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
-              ) : (<LinkContainer to='/login'>
-                <Nav.Link href='/login'>
-                  <FaUser /> Sign In
-                </Nav.Link>
-              </LinkContainer>) }
-              
+              ) : (
+                <LinkContainer to='/login'>
+                  <Nav.Link href='/login'>
+                    <FaUser /> Sign In
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown title='Admin' id='adminmenu'>
+                  <LinkContainer to='/admin/productlist'>
+                    <NavDropdown.Item>Products</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/userlist'>
+                    <NavDropdown.Item>Users</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/orderlist'>
+                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
