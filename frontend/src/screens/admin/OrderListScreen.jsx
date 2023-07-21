@@ -52,7 +52,7 @@ const OrderListScreen = () => {
                 </td>
                 <td>
                   <LinkContainer to={`/order/${order._id}`}>
-                    <Button className='btn-sm'>
+                    <Button variant='light' className='btn-sm'>
                       Details
                     </Button>
                   </LinkContainer>
