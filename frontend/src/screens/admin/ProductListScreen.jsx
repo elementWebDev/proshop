@@ -4,15 +4,31 @@ import { FaEdit, FaTrash } from 'react-icons/fa'
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
 import { toast } from 'react-toastify'
-import { useGetProductsQuery, useCreateProductMutation } from '../../slices/productsApiSlice'
+import {
+  useGetProductsQuery,
+  useCreateProductMutation,
+  useDeleteProductMutation
+} from '../../slices/productsApiSlice'
 
 const ProductListScreen = () => {
   const { data: products, isLoading, error, refetch } = useGetProductsQuery()
 
-  const [createProduct, {isLoading: loadingCreate}] = useCreateProductMutation()
+  const [createProduct, { isLoading: loadingCreate }] =
+    useCreateProductMutation()
 
-  const deleteHandler = (id) => {
-    console.log('delete', id)
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation()
+
+  const deleteHandler = async (id) => {
+    if (window.confirm('Are you sure?')) {
+      try {
+        await deleteProduct(id)
+        toast.success('Product deleted')
+        refetch()
+      } catch (err) {
+        toast.error(err?.data?.message || err.error)
+      }
+    }
   }
   const createProductHandler = async () => {
     if (window.confirm('Are you sure you want to create a new product?')) {
@@ -32,13 +48,14 @@ const ProductListScreen = () => {
           <h1>Products</h1>
         </Col>
         <Col className='text-end'>
-          <Button className='btn-sm m-3' onClick={ createProductHandler }>
+          <Button className='btn-sm m-3' onClick={createProductHandler}>
             <FaEdit /> Create Product
           </Button>
         </Col>
       </Row>
 
       {loadingCreate && <Loader />}
+      {loadingDelete && <Loader />}
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -57,7 +74,7 @@ const ProductListScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map(product => (
+              {products.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
@@ -75,7 +92,7 @@ const ProductListScreen = () => {
                       className='btn-sm'
                       onClick={() => deleteHandler(product._id)}
                     >
-                      <FaTrash style={{ color: 'white'}} />
+                      <FaTrash style={{ color: 'white' }} />
                     </Button>
                   </td>
                 </tr>
