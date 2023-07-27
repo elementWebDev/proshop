@@ -32,7 +32,8 @@ const ProductEditScreen = () => {
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation()
 
-  const [uploadProductImage, {isLoading: loadingUpload}] = useUploadProductImageMutation()
+  const [uploadProductImage, { isLoading: loadingUpload }] =
+    useUploadProductImageMutation()
 
   const navigate = useNavigate()
 
@@ -93,7 +94,9 @@ const ProductEditScreen = () => {
         {isLoading ? (
           <Loader />
         ) : error ? (
-          <Message variant='danger'>{error}</Message>
+          <Message variant='danger'>
+            {error?.data?.message || error.error}
+          </Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId='name' className='my-2'>
@@ -121,13 +124,13 @@ const ProductEditScreen = () => {
               <Form.Control
                 type='text'
                 placeholder='Enter image url'
-                value={ image }
+                value={image}
                 onChange={(e) => setImage}
               ></Form.Control>
               <Form.Control
                 type='file'
                 label='Choose file'
-                onChange={ uploadFileHandler }
+                onChange={uploadFileHandler}
               ></Form.Control>
             </Form.Group>
             {loadingUpload && <Loader />}
